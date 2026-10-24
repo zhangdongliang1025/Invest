@@ -1,0 +1,15 @@
+# macOS 系统文件
+.DS_Store
+
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+.backtest/venv/
+
+# 回测行情数据：由 .backtest/download_*.py 重新获取，不入库
+.backtest/data/
+
+# Obsidian 本机 UI 状态（跨机器不通用）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/

@@ -24,8 +24,20 @@ def strip_fm(text):
     return text
 
 
-def body_of(text):
+def content_of(text):
+    """只取「## 正文」段——原始内容；未规范化的归档件取整篇。
+
+    「内容摘要」是后加的概括层，不参与数值主张提取，否则摘要一改，证据就漂了。
+    """
     b = strip_fm(text)
+    marker = "\n## 正文\n"
+    if marker in b:
+        return b.split(marker, 1)[1]
+    return b
+
+
+def body_of(text):
+    b = content_of(text)
     b = MD_LINK.sub(r"\1", b)
     b = BARE_URL.sub("", b)
     b = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", b)

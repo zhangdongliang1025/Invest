@@ -25,8 +25,20 @@ def strip_fm(text):
     return text
 
 
+def content_of(text):
+    """规范化后的素材只取「## 正文」段——那是原始内容；未规范化的归档件取整篇。
+
+    「内容摘要」是后加的概括层，不参与重复判定，否则摘要一改，证据就漂了。
+    """
+    body = strip_fm(text)
+    marker = "\n## 正文\n"
+    if marker in body:
+        return body.split(marker, 1)[1]
+    return body
+
+
 def normalize(text):
-    t = strip_fm(text)
+    t = content_of(text)
     t = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", t)          # images
     t = re.sub(r"\[\[([^\]|]*\|)?([^\]]*)\]\]", r"\2", t)  # wikilinks
     t = re.sub(r"https?://\S+", "", t)                     # urls
@@ -47,7 +59,7 @@ def jaccard(a, b):
 
 
 def line_blocks(t):
-    body = strip_fm(t)
+    body = content_of(t)
     blocks = []
     for line in body.split("\n"):
         s = line.strip()

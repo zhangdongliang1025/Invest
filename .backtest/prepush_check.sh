@@ -64,6 +64,17 @@ else
   echo "  OK ($st_n / 基线 $BASE_STATUS)"
 fi
 
+echo "== 6. 素材正文零改动（整理前后逐字比对）=="
+norm_out=$(python3 .backtest/verify_raw_normalize.py 2>&1)
+if printf '%s\n' "$norm_out" | grep -q "全部通过"; then
+  echo "  OK"
+  printf '%s\n' "$norm_out" | sed 's/^/  /'
+else
+  echo "  FAIL: 10-原始素材 的正文被改动，或缺「内容摘要」/「## 正文」结构"
+  printf '%s\n' "$norm_out" | sed 's/^/  /' | head -20
+  fail=1
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "结论：全部通过，可以提交并推送。"
